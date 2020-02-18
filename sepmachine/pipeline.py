@@ -15,8 +15,16 @@ class BasePipeline(object):
     def run(self, video_path: str):
         logger.info("start pipeline")
         logger.info(f"video: {video_path}")
-        cap_result: bool = self.capture.cap(video_path)
-        assert cap_result
+
+        # capture
+        self.capture.start(video_path)
+        logger.info("start recording")
+        self.capture.operate()
+        logger.info("stop recording")
+        capture_result: bool = self.capture.end()
+        assert capture_result
+
+        # handler
         handle_result: bool = self.handler.handle(video_path)
         assert handle_result
         logger.info("end pipeline")
