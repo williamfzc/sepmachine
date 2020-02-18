@@ -14,6 +14,7 @@ wrapper of stagesepx, for convenient usage.
     - different platforms
         - android
         - ios
+        - external camera
         - ...
     - (record and) return a video path to handler
 - (video) handler
