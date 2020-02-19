@@ -27,5 +27,10 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     python_requires=">=3.6,<3.8",
-    install_requires=["stagesepx[keras]>=0.10.2", "loguru>=0.2.5", "adbutils>=0.7.1"],
+    install_requires=[
+        "stagesepx[keras]>=0.10.2",
+        "loguru>=0.2.5",
+        "minadb>=0.1.0",
+        "ffmpeg-python>=0.2.0"
+    ],
 )
