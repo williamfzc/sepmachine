@@ -39,11 +39,15 @@ class AdbCapture(BaseCapture):
         self.record_stop(temp_video_path)
         logger.info(f"video saved to {temp_video_path}")
 
-        # ffmpeg converter
-        stream = ffmpeg.input(temp_video_path)
-        stream = ffmpeg.filter(stream, 'fps', fps=self.fps)
-        stream = ffmpeg.output(stream, self.video_path)
-        ffmpeg.run(stream, overwrite_output=True)
+        try:
+            # ffmpeg converter
+            stream = ffmpeg.input(temp_video_path)
+            stream = ffmpeg.filter(stream, 'fps', fps=self.fps)
+            stream = ffmpeg.output(stream, self.video_path)
+            ffmpeg.run(stream, overwrite_output=True)
+        except FileNotFoundError:
+            logger.warning("no ffmpeg installation found")
+            logger.warning("skip fps converter")
         logger.info(f"video convert finished. fps: {self.fps}")
 
         # remove temp file
