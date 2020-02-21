@@ -51,6 +51,7 @@ class AdbCapture(BaseCapture):
         logger.info(f"video convert finished. fps: {self.fps}")
 
         # remove temp file
+        temp_video.close()
         os.remove(temp_video_path)
         logger.debug(f"removed: {temp_video_path}")
 
