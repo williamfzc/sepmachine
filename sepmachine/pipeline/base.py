@@ -22,9 +22,9 @@ class BasePipeline(object):
         self.capture.operate()
         logger.info("stop recording")
         capture_result: bool = self.capture.end()
-        assert capture_result
+        assert capture_result, "capture error"
 
         # handler
         handle_result: bool = self.handler.handle(video_path)
-        assert handle_result
+        assert handle_result, "handler error"
         logger.info("end pipeline")
