@@ -1,4 +1,6 @@
+import typing
 from loguru import logger
+from stagesepx.classifier import ClassifierResult
 
 
 class BaseHandler(object):
@@ -6,6 +8,8 @@ class BaseHandler(object):
         # config here
         self.preload: bool = preload or True
         self.frame_count: int = frame_count or 5
+        # result
+        self.classifier_result: typing.Optional[ClassifierResult] = None
 
         logger.info(f"config: {self.__dict__}")
 

@@ -22,9 +22,9 @@ class NormalHandler(BaseHandler):
         cl = SVMClassifier()
         cl.load(data_home)
         cl.train()
-        classify_result = cl.classify(video, stable)
+        self.classifier_result = cl.classify(video, stable)
 
         # --- draw ---
         r = Reporter()
-        r.draw(classify_result)
+        r.draw(self.classifier_result)
         return True
