@@ -5,6 +5,7 @@ import time
 import ffmpeg
 import tempfile
 import os
+import shutil
 from loguru import logger
 from minadb import ADBDevice
 
@@ -45,14 +46,21 @@ class AdbCapture(BaseCapture):
             stream = ffmpeg.filter(stream, 'fps', fps=self.fps)
             stream = ffmpeg.output(stream, self.video_path)
             ffmpeg.run(stream, overwrite_output=True)
+            logger.info(f"video convert finished. fps: {self.fps}")
         except FileNotFoundError:
             logger.warning("no ffmpeg installation found")
             logger.warning("skip fps converter")
-        logger.info(f"video convert finished. fps: {self.fps}")
+            shutil.copyfile(temp_video_path, self.video_path)
+        finally:
+            logger.info(f"video has been moved to: {self.video_path}")
 
         # remove temp file
         temp_video.close()
-        os.remove(temp_video_path)
-        logger.debug(f"removed: {temp_video_path}")
+        try:
+            os.remove(temp_video_path)
+            logger.debug(f"removed: {temp_video_path}")
+        except PermissionError as e:
+            logger.error(e)
+            logger.warning("skip removing temp file")
 
         return True
