@@ -48,8 +48,8 @@ class AdbCapture(BaseCapture):
             ffmpeg.run(stream, overwrite_output=True)
             logger.info(f"video convert finished. fps: {self.fps}")
         except FileNotFoundError:
-            logger.warning("no ffmpeg installation found")
-            logger.warning("skip fps converter")
+            logger.warning("no ffmpeg installation found, skip fps converter")
+            logger.warning("WARNING: ffmpeg is necessary for accuracy")
             shutil.copyfile(temp_video_path, self.video_path)
         finally:
             logger.info(f"video has been moved to: {self.video_path}")
