@@ -11,7 +11,7 @@ from minadb import ADBDevice
 
 
 class AdbCapture(BaseCapture):
-    def __init__(self, serial_no: str, fps: int = 60):
+    def __init__(self, serial_no: str = None, fps: int = 60):
         # args
         self.serial_no: str = serial_no
         self.fps: int = fps
