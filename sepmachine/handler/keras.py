@@ -13,6 +13,7 @@ class KerasHandler(BaseHandler):
         self.model_path: str = model_path
 
     def handle(self, video_path: str) -> bool:
+        super(KerasHandler, self).handle(video_path)
         video = VideoObject(video_path)
         if self.preload:
             video.load_frames()

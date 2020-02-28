@@ -8,6 +8,7 @@ from stagesepx.video import VideoObject
 
 class NormalHandler(BaseHandler):
     def handle(self, video_path: str) -> bool:
+        super(NormalHandler, self).handle(video_path)
         video = VideoObject(video_path)
         if self.preload:
             video.load_frames()
