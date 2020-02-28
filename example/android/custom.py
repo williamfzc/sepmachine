@@ -7,6 +7,7 @@ import time
 
 VIDEO_PATH = "../../demo1.mp4"
 WEIXIN_LABEL = "微信"
+WEIXIN_LOGIN_LABEL = "登录"
 WEIXIN_PACKAGE_NAME = "com.tencent.mm"
 
 
@@ -26,8 +27,10 @@ class MyAdbCapture(AdbCapture):
     def operate(self) -> bool:
         # do something??
         time.sleep(2)
-        self.u2_device(text=WEIXIN_LABEL).click()
-        time.sleep(4)
+        self.u2_device(text=WEIXIN_LABEL).long_click(duration=0.2)
+        while not self.u2_device(text=WEIXIN_LOGIN_LABEL).exists():
+            time.sleep(1)
+        time.sleep(1)
         return True
 
 
@@ -35,6 +38,8 @@ class MyAdbCapture(AdbCapture):
 class MyKerasHandler(KerasHandler):
     def __init__(self, *args, **kwargs):
         super(MyKerasHandler, self).__init__(*args, **kwargs)
+
+        # you can add custom result handler
         self.result = []
 
     def handle(self, video_path: str) -> bool:
@@ -54,15 +59,21 @@ class MyKerasHandler(KerasHandler):
         # or maybe unstable ranges
         unstable_ranges = self.classifier_result.get_not_stable_stage_range()
         first_changing_frame = unstable_ranges[0][-1]
-        new_cost = start_frame_of_2.timestamp - first_changing_frame.timestamp
-        print(f"new cost: {new_cost}")
-        self.result.append([cost, new_cost])
+
+        end_time = start_frame_of_2.timestamp
+        start_time = first_changing_frame.timestamp
+        new_cost = end_time - start_time
+        self.result.append([
+            start_time,
+            end_time,
+            new_cost,
+        ])
 
         return handler_result
 
 
-adb_cap = MyAdbCapture(serial_no="9c12aa96")
-handler = MyKerasHandler(model_path="./output.h5")
+adb_cap = MyAdbCapture()
+handler = MyKerasHandler(model_path="./output.h5", result_path="./hahaha")
 pipeline = BasePipeline(adb_cap, handler)
-pipeline.loop_run(VIDEO_PATH, 3)
+pipeline.loop_run(loop_num=3)
 print(handler.result)
