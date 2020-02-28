@@ -4,6 +4,7 @@ from sepmachine.handler.base import BaseHandler
 import typing
 import tempfile
 import os
+import time
 from loguru import logger
 
 
@@ -16,6 +17,7 @@ class BasePipeline(object):
         logger.info(f"handler: {self.handler.__class__}")
 
     def run(self, video_path: str = None) -> bool:
+        start_time = time.time()
         use_temp: bool = False
         if not video_path:
             logger.info("no specific video path, use temp file")
@@ -50,6 +52,9 @@ class BasePipeline(object):
                 # windows issue
                 except PermissionError as e:
                     logger.error(e)
+            end_time = time.time()
+            cost = end_time - start_time
+            logger.info(f"time cost: {cost}")
 
     def loop_run(self, video_path: str = None, loop_num: int = 1) -> typing.List[bool]:
         ret_list = list()
