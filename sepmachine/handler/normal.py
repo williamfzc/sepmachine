@@ -16,7 +16,7 @@ class NormalHandler(BaseHandler):
         cutter = VideoCutter()
         res = cutter.cut(video)
         stable, unstable = res.get_range()
-        data_home = res.pick_and_save(stable, self.frame_count)
+        data_home = res.pick_and_save(stable, self.frame_count, to_dir=self.result_path)
 
         # --- classify ---
         cl = SVMClassifier()
@@ -26,5 +26,5 @@ class NormalHandler(BaseHandler):
 
         # --- draw ---
         r = Reporter()
-        r.draw(self.classifier_result)
+        r.draw(self.classifier_result, report_path=self.result_report_path)
         return True

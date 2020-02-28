@@ -20,7 +20,7 @@ class KerasHandler(BaseHandler):
         # --- cutter ---
         cutter = VideoCutter()
         res = cutter.cut(video)
-        stable, unstable = res.get_range()
+        stable, unstable = res.get_range(threshold=0.98)
 
         # --- classify ---
         cl = KerasClassifier()
@@ -28,11 +28,11 @@ class KerasHandler(BaseHandler):
             logger.info("load existed pre-train model")
             cl.load_model(self.model_path)
         else:
-            data_home = res.pick_and_save(stable, self.frame_count)
+            data_home = res.pick_and_save(stable, self.frame_count, to_dir=self.result_path)
             cl.train(data_home)
         self.classifier_result = cl.classify(video, stable)
 
         # --- draw ---
         r = Reporter()
-        r.draw(self.classifier_result)
+        r.draw(self.classifier_result, report_path=self.result_report_path)
         return True
