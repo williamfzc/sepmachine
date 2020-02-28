@@ -20,7 +20,7 @@ class AdbCapture(BaseCapture):
         self.device: ADBDevice = ADBDevice(self.serial_no)
         self.record_stop: typing.Optional[typing.Callable] = None
         self.video_path: str = ""
-        logger.info(f"config: {self.__dict__}")
+        logger.info(f"capture config: {self.__dict__}")
 
     def start(self, video_path: str) -> bool:
         self.record_stop = self.device.screen_record()

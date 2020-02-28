@@ -20,7 +20,7 @@ class BaseHandler(object):
             self.result_path = toolbox.get_timestamp_str()
         os.makedirs(self.result_path, exist_ok=True)
 
-        logger.info(f"config: {self.__dict__}")
+        logger.info(f"handler config: {self.__dict__}")
 
     def handle(self, video_path: str) -> bool:
         self.result_report_path: str = os.path.join(self.result_path, f"{toolbox.get_timestamp_str()}.html")

@@ -9,8 +9,8 @@ from loguru import logger
 
 class KerasHandler(BaseHandler):
     def __init__(self, model_path: str = None, *args, **kwargs):
-        super(KerasHandler, self).__init__(*args, **kwargs)
         self.model_path: str = model_path
+        super(KerasHandler, self).__init__(*args, **kwargs)
 
     def handle(self, video_path: str) -> bool:
         super(KerasHandler, self).handle(video_path)
