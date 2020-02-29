@@ -30,7 +30,7 @@ setup(
     install_requires=[
         "stagesepx[keras]>=0.10.2",
         "loguru>=0.2.5",
-        "minadb>=0.1.1",
+        "minadb>=0.3.1",
         "ffmpeg-python>=0.2.0",
     ],
 )
