@@ -1,5 +1,6 @@
 from sepmachine.pipeline import BasePipeline
 from sepmachine.capture.adb import AdbCapture
+from sepmachine.capture.scrcpy import ScrcpyCapture
 from sepmachine.handler.keras import KerasHandler
 
 import uiautomator2 as u2
@@ -12,7 +13,7 @@ WEIXIN_PACKAGE_NAME = "com.tencent.mm"
 
 
 # custom capture
-class MyAdbCapture(AdbCapture):
+class MyScrcpyCapture(ScrcpyCapture):
     def start(self, video_path: str) -> bool:
         self.prepare()
         return super(MyAdbCapture, self).start(video_path)
@@ -20,17 +21,16 @@ class MyAdbCapture(AdbCapture):
     def prepare(self):
         self.u2_device = u2.connect(self.serial_no)
         self.u2_device.app_clear(WEIXIN_PACKAGE_NAME)
-        self.device.kill_process_by_name("screenrecord")
         # make sure env is normal
-        assert self.u2_device(text=WEIXIN_LABEL).exists()
+        assert self.u2_device(text=WEIXIN_LABEL).exists(), "weixin logo not existed"
 
     def operate(self) -> bool:
         # do something??
-        time.sleep(2)
-        self.u2_device(text=WEIXIN_LABEL).long_click(duration=0.2)
+        time.sleep(1)
+        self.u2_device(text=WEIXIN_LABEL).click()
         while not self.u2_device(text=WEIXIN_LOGIN_LABEL).exists():
             time.sleep(1)
-        time.sleep(1)
+        time.sleep(2)
         return True
 
 
@@ -58,22 +58,18 @@ class MyKerasHandler(KerasHandler):
 
         # or maybe unstable ranges
         unstable_ranges = self.classifier_result.get_not_stable_stage_range()
-        first_changing_frame = unstable_ranges[0][-1]
+        first_changing_frame = unstable_ranges[1][0]
 
         end_time = start_frame_of_2.timestamp
         start_time = first_changing_frame.timestamp
         new_cost = end_time - start_time
-        self.result.append([
-            start_time,
-            end_time,
-            new_cost,
-        ])
+        self.result.append([start_time, end_time, new_cost])
 
         return handler_result
 
 
-adb_cap = MyAdbCapture()
-handler = MyKerasHandler(model_path="./output.h5", result_path="./hahaha")
+adb_cap = MyScrcpyCapture()
+handler = MyKerasHandler(model_path="output.h5", result_path="./hahaha")
 pipeline = BasePipeline(adb_cap, handler)
 pipeline.loop_run(loop_num=3)
 print(handler.result)
