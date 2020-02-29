@@ -16,7 +16,7 @@ class NormalHandler(BaseHandler):
         # --- cutter ---
         cutter = VideoCutter()
         res = cutter.cut(video)
-        stable, unstable = res.get_range()
+        stable, unstable = res.get_range(threshold=0.98, offset=3)
         data_home = res.pick_and_save(stable, self.frame_count, to_dir=self.result_path)
 
         # --- classify ---
