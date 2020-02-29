@@ -8,6 +8,7 @@ import os
 import shutil
 import subprocess
 import signal
+import sys
 from loguru import logger
 from minadb import ADBDevice
 
@@ -27,12 +28,11 @@ class ScrcpyCapture(BaseCapture):
 
     def start(self, video_path: str) -> bool:
         self.video_path = video_path
-        # save to temp file
-        temp_video = tempfile.NamedTemporaryFile(
-            mode="wb+", suffix=".mp4", delete=False
-        )
+        # save to temp file (scrcpy will save video on pc side directly)
+        temp_video = tempfile.NamedTemporaryFile(mode="wb+", suffix=".mkv")
         temp_video_path = temp_video.name
         self.temp_video_path = temp_video_path
+        temp_video.close()
         logger.debug(f"video will be saved to {self.temp_video_path}")
 
         device_flag = ["-s", self.serial_no] if self.serial_no else []
@@ -49,8 +49,12 @@ class ScrcpyCapture(BaseCapture):
         assert proc.poll() is None, f"run command failed: {record_command}"
 
         def stop():
-            proc.send_signal(signal.SIGINT)
-            temp_video.close()
+            if sys.platform == "win32":
+                self.device.kill_process_by_name("app_process")
+                proc.terminate()
+            else:
+                proc.send_signal(signal.SIGINT)
+
         self.record_stop = stop
 
         return True

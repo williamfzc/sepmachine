@@ -34,11 +34,12 @@ class AdbCapture(BaseCapture):
     def end(self) -> bool:
         assert self.record_stop and self.video_path
 
-        # save to temp file
+        # save to temp file (for ffmpeg)
         temp_video = tempfile.NamedTemporaryFile(
             mode="wb+", suffix=".mp4", delete=False
         )
         temp_video_path = temp_video.name
+        temp_video.close()
         self.record_stop(temp_video_path)
         logger.info(f"video saved to {temp_video_path}")
 
@@ -57,7 +58,6 @@ class AdbCapture(BaseCapture):
             logger.info(f"video has been moved to: {self.video_path}")
 
         # remove temp file
-        temp_video.close()
         try:
             os.remove(temp_video_path)
             logger.debug(f"removed: {temp_video_path}")
