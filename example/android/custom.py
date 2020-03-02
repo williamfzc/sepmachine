@@ -16,7 +16,7 @@ WEIXIN_PACKAGE_NAME = "com.tencent.mm"
 class MyScrcpyCapture(ScrcpyCapture):
     def start(self, video_path: str) -> bool:
         self.prepare()
-        return super(MyAdbCapture, self).start(video_path)
+        return super(MyScrcpyCapture, self).start(video_path)
 
     def prepare(self):
         self.u2_device = u2.connect(self.serial_no)
