@@ -1,5 +1,7 @@
 # sepmachine
 
+![PyPI](https://img.shields.io/pypi/v/sepmachine)
+
 stagesepx workflow in production
 
 ## 目标
