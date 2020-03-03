@@ -32,5 +32,6 @@ setup(
         "loguru>=0.2.5",
         "minadb>=0.3.1",
         "ffmpeg-python>=0.2.0",
+        "tensorflow",
     ],
 )
