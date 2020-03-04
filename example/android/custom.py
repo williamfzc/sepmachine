@@ -65,6 +65,9 @@ class MyKerasHandler(KerasHandler):
         new_cost = end_time - start_time
         self.result.append([start_time, end_time, new_cost])
 
+        # 0.3.1 +
+        # cost = self.time_cost_between("0", "2")
+
         return handler_result
 
 

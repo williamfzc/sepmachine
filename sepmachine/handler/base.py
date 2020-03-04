@@ -27,3 +27,6 @@ class BaseHandler(object):
             self.result_path, f"{toolbox.get_timestamp_str()}.html"
         )
         return True
+
+    def time_cost_between(self, start_stage: str , end_stage: str) -> float:
+        return self.classifier_result.last(start_stage).timestamp - self.classifier_result.first(end_stage).timestamp
