@@ -9,12 +9,18 @@ from loguru import logger
 
 
 class BasePipeline(object):
-    def __init__(self, capture: BaseCapture, handler: BaseHandler):
+    def __init__(self, capture: BaseCapture, handler: BaseHandler, extras: dict = None):
         self.capture: BaseCapture = capture
         self.handler: BaseHandler = handler
 
+        # bind extra args
+        self.extras: dict = extras
+        self.capture.extras = extras
+        self.handler.extras = extras
+
         logger.info(f"capture: {self.capture.__class__}")
         logger.info(f"handler: {self.handler.__class__}")
+        logger.info(f"extras: {self.extras}")
 
     def run(self, video_path: str = None) -> bool:
         start_time = time.time()
