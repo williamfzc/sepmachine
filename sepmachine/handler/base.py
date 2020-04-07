@@ -31,5 +31,8 @@ class BaseHandler(object):
         )
         return True
 
-    def time_cost_between(self, start_stage: str , end_stage: str) -> float:
-        return self.classifier_result.last(start_stage).timestamp - self.classifier_result.first(end_stage).timestamp
+    def time_cost_between(self, start_stage: str, end_stage: str) -> float:
+        return (
+            self.classifier_result.last(start_stage).timestamp
+            - self.classifier_result.first(end_stage).timestamp
+        )

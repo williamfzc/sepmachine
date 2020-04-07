@@ -14,7 +14,7 @@ from minadb import ADBDevice
 
 
 class ScrcpyCapture(BaseCapture):
-    def __init__(self, serial_no: str = None, fps: int = 60):
+    def __init__(self, serial_no: str = None, fps: int = 60, manual_mode: bool = None):
         # args
         self.serial_no: str = serial_no
         self.fps: int = fps
@@ -22,8 +22,10 @@ class ScrcpyCapture(BaseCapture):
         # others
         self.device: ADBDevice = ADBDevice(self.serial_no)
         self.record_stop: typing.Optional[typing.Callable] = None
+        self.record_proc: typing.Optional[subprocess.Popen] = None
         self.video_path: str = ""
         self.temp_video_path: str = ""
+        self.manual_mode: bool = bool(manual_mode)
         logger.info(f"config: {self.__dict__}")
 
     def start(self, video_path: str) -> bool:
@@ -40,13 +42,16 @@ class ScrcpyCapture(BaseCapture):
             "scrcpy",
             *device_flag,
             "--render-expired-frames",
-            "-Nr",
+            # no mirror if in auto mode
+            "-Nr" if not self.manual_mode else "",
             self.temp_video_path,
         ]
-        logger.info(f"start record: {record_command}")
+        logger.info(f"trying to start: {record_command}")
         proc = subprocess.Popen(record_command)
+        # wait for scrcpy
         time.sleep(5)
         assert proc.poll() is None, f"run command failed: {record_command}"
+        logger.info("recording ...")
 
         def stop():
             if sys.platform == "win32":
@@ -56,11 +61,17 @@ class ScrcpyCapture(BaseCapture):
                 proc.send_signal(signal.SIGINT)
 
         self.record_stop = stop
-
+        self.record_proc = proc
         return True
 
     def operate(self) -> bool:
-        time.sleep(5)
+        # auto mode
+        if not self.manual_mode:
+            time.sleep(5)
+            return True
+        # manual mode, wait until process dead
+        while self.record_proc.poll() is None:
+            time.sleep(1)
         return True
 
     def end(self) -> bool:
