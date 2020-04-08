@@ -15,6 +15,7 @@ from minadb import ADBDevice
 
 class ScrcpyCapture(BaseCapture):
     def __init__(self, serial_no: str = None, fps: int = 60, manual_mode: bool = None):
+        super(ScrcpyCapture, self).__init__()
         # args
         self.serial_no: str = serial_no
         self.fps: int = fps
@@ -43,7 +44,7 @@ class ScrcpyCapture(BaseCapture):
             *device_flag,
             "--render-expired-frames",
             # no mirror if in auto mode
-            "-Nr" if not self.manual_mode else "",
+            "-Nr" if not self.manual_mode else "-r",
             self.temp_video_path,
         ]
         logger.info(f"trying to start: {record_command}")
@@ -100,3 +101,9 @@ class ScrcpyCapture(BaseCapture):
             logger.warning("skip removing temp file")
 
         return True
+
+
+class ScrcpyManualCapture(ScrcpyCapture):
+    def __init__(self, *args, **kwargs):
+        super(ScrcpyManualCapture, self).__init__(*args, **kwargs)
+        self.manual_mode = True
