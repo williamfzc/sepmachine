@@ -52,7 +52,6 @@ class ScrcpyCapture(BaseCapture):
         # wait for scrcpy
         time.sleep(5)
         assert proc.poll() is None, f"run command failed: {record_command}"
-        logger.info("recording ...")
 
         def stop():
             if sys.platform == "win32":
