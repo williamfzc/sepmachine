@@ -2,7 +2,12 @@
 
 ![PyPI](https://img.shields.io/pypi/v/sepmachine)
 
-stagesepx workflow in production
+[stagesepx](https://github.com/williamfzc/stagesepx) workflow in production
+
+## NOTICE
+
+- 这种落地方式仅提供了一种对 [stagesepx](https://github.com/williamfzc/stagesepx) 的封装方案（而不是唯一的与标准的）；
+- 建议有开发人力的团队参考一下自行封装：）
 
 ## 目标
 
