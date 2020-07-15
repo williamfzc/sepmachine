@@ -48,7 +48,7 @@ class BasePipeline(object):
             logger.info("end pipeline")
             return True
         except Exception as e:
-            logger.error(e)
+            logger.exception(e)
             return False
         finally:
             if use_temp:
