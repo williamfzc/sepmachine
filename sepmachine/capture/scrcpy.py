@@ -89,6 +89,18 @@ class ScrcpyCapture(BaseCapture):
             logger.warning("no ffmpeg installation found, skip fps converter")
             logger.warning("WARNING: ffmpeg is necessary for accuracy")
             shutil.copyfile(self.temp_video_path, self.video_path)
+        except ffmpeg._run.Error as e:
+            logger.warning(e)
+            command = [
+                "ffmpeg",
+                "-i",
+                self.temp_video_path,
+                "-r",
+                str(self.fps),
+                self.video_path,
+            ]
+            logger.info(f"retry with command line calling: {command}")
+            subprocess.check_call(command)
         finally:
             logger.info(f"video has been moved to: {self.video_path}")
 
