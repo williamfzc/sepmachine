@@ -89,7 +89,7 @@ class ScrcpyCapture(BaseCapture):
             logger.warning("no ffmpeg installation found, skip fps converter")
             logger.warning("WARNING: ffmpeg is necessary for accuracy")
             shutil.copyfile(self.temp_video_path, self.video_path)
-        except ffmpeg._run.Error as e:
+        except Exception as e:
             logger.warning(e)
             command = [
                 "ffmpeg",
