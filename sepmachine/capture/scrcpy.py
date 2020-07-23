@@ -80,6 +80,7 @@ class ScrcpyCapture(BaseCapture):
 
         command = [
             "ffmpeg",
+            "-y",
             "-i",
             self.temp_video_path,
             "-r",
