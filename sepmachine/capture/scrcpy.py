@@ -78,31 +78,16 @@ class ScrcpyCapture(BaseCapture):
         assert self.record_stop and self.video_path
         self.record_stop()
 
-        try:
-            # ffmpeg converter
-            stream = ffmpeg.input(self.temp_video_path)
-            stream = ffmpeg.filter(stream, "fps", fps=self.fps)
-            stream = ffmpeg.output(stream, self.video_path)
-            ffmpeg.run(stream, overwrite_output=True)
-            logger.info(f"video convert finished. fps: {self.fps}")
-        except FileNotFoundError:
-            logger.warning("no ffmpeg installation found, skip fps converter")
-            logger.warning("WARNING: ffmpeg is necessary for accuracy")
-            shutil.copyfile(self.temp_video_path, self.video_path)
-        except Exception as e:
-            logger.warning(e)
-            command = [
-                "ffmpeg",
-                "-i",
-                self.temp_video_path,
-                "-r",
-                str(self.fps),
-                self.video_path,
-            ]
-            logger.info(f"retry with command line calling: {command}")
-            subprocess.check_call(command)
-        finally:
-            logger.info(f"video has been moved to: {self.video_path}")
+        command = [
+            "ffmpeg",
+            "-i",
+            self.temp_video_path,
+            "-r",
+            str(self.fps),
+            self.video_path,
+        ]
+        logger.info(f"command line calling: {command}")
+        subprocess.check_call(command)
 
         try:
             os.remove(self.temp_video_path)
